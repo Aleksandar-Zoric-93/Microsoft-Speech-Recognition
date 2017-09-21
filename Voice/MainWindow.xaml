@@ -1,0 +1,17 @@
+﻿<Window x:Name="Ella" x:Class="Voice.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Voice"
+        mc:Ignorable="d"
+        Title="Ella" Height="350" Width="525" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
+    <Grid x:Name="micBtn1" Background="#FF2C2C2C">
+        <TextBox x:Name="answer" HorizontalAlignment="Left" Height="122" Margin="22,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="474" Background="#FF2C2C2C" BorderBrush="{x:Null}" Foreground="White" TextChanged="answer_TextChanged"/>
+        
+             
+        <Image x:Name="micBtn" Source="mic.png" Margin="196,145,205,56" />
+        <Image x:Name="enableMic" Source="enableMic.png" Margin="196,145,205,56" Visibility="hidden"/>
+        <Label x:Name="copyrightLbl" Content="©Aleksandar Zoric 2017" HorizontalAlignment="Left" Margin="184,315,0,0" VerticalAlignment="Top" Foreground="#FFACACAC"/>
+    </Grid>
+</Window>
