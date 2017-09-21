@@ -29,12 +29,8 @@ namespace Voice
         String myName;
         Process facebook;
 
-
-
-
-
-        string word = System.IO.File.ReadAllText(@"words.txt").Replace(@"""", String.Empty);
-        string[] words = System.IO.File.ReadAllLines(@"words.txt");
+        string word = System.IO.File.ReadAllText("../../../../Voice/Voice/words.txt").Replace(@"""", String.Empty);
+        string[] words = System.IO.File.ReadAllLines("../../../../Voice/Voice/words.txt");
 
         Boolean listenMode;
 
@@ -194,10 +190,7 @@ namespace Voice
                         break;
 
 
-
-
-                    default:
-                        sSynth.Speak("i do not understand");
+                    default:                     
                         answer.Text = answer.Text + " " + e.Result.Text.ToString();
                         break;
                 }

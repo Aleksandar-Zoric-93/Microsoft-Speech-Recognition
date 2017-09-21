@@ -107,5 +107,8 @@
   <ItemGroup>
     <Resource Include="enableMic.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="words.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
