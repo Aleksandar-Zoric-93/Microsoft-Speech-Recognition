@@ -197,6 +197,7 @@ namespace Voice
 
 
                     default:
+                        sSynth.Speak("i do not understand");
                         answer.Text = answer.Text + " " + e.Result.Text.ToString();
                         break;
                 }
