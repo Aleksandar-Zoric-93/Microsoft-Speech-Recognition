@@ -17,11 +17,11 @@ namespace Voice
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class SetupWindow : Window
     {
         MainWindow mainWindow = null;
 
-        public Window1(MainWindow mw)
+        public SetupWindow(MainWindow mw)
         {
             InitializeComponent();
             this.mainWindow = mw;

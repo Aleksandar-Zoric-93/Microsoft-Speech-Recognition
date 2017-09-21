@@ -82,7 +82,7 @@ namespace Voice
 
         private void sRecognize_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
-            Window1 setupScreen = new Window1(this);
+            SetupWindow setupScreen = new SetupWindow(this);
 
             if (e.Result.Text == "listen")
             {
