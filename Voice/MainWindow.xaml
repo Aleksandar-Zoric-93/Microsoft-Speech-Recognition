@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="Ella" Height="350" Width="525" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" WindowStyle="None">
     <Grid x:Name="micBtn1" Background="#FF2C2C2C">
-        <TextBox x:Name="answer" HorizontalAlignment="Left" Height="122" Margin="22,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="474" Background="#FF2C2C2C" BorderBrush="{x:Null}" Foreground="White" TextChanged="answer_TextChanged"/>
-        
-             
+        <TextBox x:Name="answer" HorizontalAlignment="Left" Height="99" Margin="22,47,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="474" Background="#FF2C2C2C" BorderBrush="{x:Null}" Foreground="White" TextChanged="answer_TextChanged"/>
+
+
         <Image x:Name="micBtn" Source="mic.png" Margin="196,145,205,56" />
         <Image x:Name="enableMic" Source="enableMic.png" Margin="196,145,205,56" Visibility="hidden"/>
         <Label x:Name="copyrightLbl" Content="©Aleksandar Zoric 2017" HorizontalAlignment="Left" Margin="184,315,0,0" VerticalAlignment="Top" Foreground="#FFACACAC"/>

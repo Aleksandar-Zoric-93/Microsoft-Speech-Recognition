@@ -34,3 +34,6 @@
 "open facebook"
 "close facebook"
 "open youtube"
+"Keelyn"
+"google"
+"search google"

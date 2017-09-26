@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.Speech.Synthesis;
 using System.Speech.Recognition;
 using System.Diagnostics;
+using System.Speech.Recognition.SrgsGrammar;
 
 namespace Voice
 {
@@ -25,14 +26,21 @@ namespace Voice
         SpeechSynthesizer sSynth = new SpeechSynthesizer();
         PromptBuilder pBuilder = new PromptBuilder();
         SpeechRecognitionEngine sRecognize = new SpeechRecognitionEngine();
-        String aiName;
+        SpeechRecognitionEngine sRecognize1 = new SpeechRecognitionEngine();
+        String aiName = "Ella";
         String myName;
-        Process facebook;
+        Process proc;
+        string ISeventStarted;
+
 
         string word = System.IO.File.ReadAllText("../../../../Voice/Voice/words.txt").Replace(@"""", String.Empty);
         string[] words = System.IO.File.ReadAllLines("../../../../Voice/Voice/words.txt");
 
-        Boolean listenMode;
+        string mediaWords = System.IO.File.ReadAllText("../../../../Voice/Voice/media.txt").Replace(@"""", String.Empty);
+        string[] mediaWordsList = System.IO.File.ReadAllLines("../../../../Voice/Voice/media.txt");
+
+
+        Boolean ISListenModeEnabled;
 
 
 
@@ -49,20 +57,25 @@ namespace Voice
             sSynth.Speak("start up sequence initialized.  Welcome " + myName);
 
             Choices sList = new Choices();
+            Choices mediaChoices = new Choices();
 
             sList.Add(words);
+            mediaChoices.Add(mediaWordsList);
+
             Grammar gr = new Grammar(new GrammarBuilder(sList));
+            Grammar mediaMenuGrammar = new Grammar(new GrammarBuilder(mediaChoices));
+
 
             try
             {
                 sRecognize.RequestRecognizerUpdate();
                 sRecognize.LoadGrammar(gr);
+                sRecognize.LoadGrammar(mediaMenuGrammar);
+                sRecognize.LoadGrammarAsync(new DictationGrammar());
                 sRecognize.SpeechRecognized += sRecognize_SpeechRecognized;
                 sRecognize.SetInputToDefaultAudioDevice();
                 sRecognize.RecognizeAsync(RecognizeMode.Multiple);
                 sRecognize.Recognize();
-
-
             }
 
             catch
@@ -79,16 +92,34 @@ namespace Voice
         private void sRecognize_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
         {
             SetupWindow setupScreen = new SetupWindow(this);
+            string speech = e.Result.Text.ToLower();
 
+            //Keyword to enable listening mode
             if (e.Result.Text == "listen")
             {
-                listenMode = true; //resume listening
+                ISListenModeEnabled = true; //resume listening
                 sSynth.Speak("listening mode initializing.  Listening now");
                 enableMic.Visibility = System.Windows.Visibility.Visible;
             }
 
-            if (listenMode == true)
+            //Check if AI is in listening mode
+            if (ISListenModeEnabled == true)
             {
+                //Start Google Search
+                if (speech == "search google")
+                {
+                    ISeventStarted = speech;
+                    sSynth.SpeakAsync("what do you want to search google for?");
+                    speech = string.Empty;
+                }
+                else if (speech != string.Empty && ISeventStarted == "search google")
+                {
+                    Process.Start("http://google.com/search?q=" + speech);
+                    ISeventStarted = string.Empty;
+                }
+                //End Google Search
+
+                //Start of commands
                 switch (e.Result.Text)
                 {
                     case "exit application":
@@ -130,7 +161,7 @@ namespace Voice
                     case "sleep":
                         enableMic.Visibility = System.Windows.Visibility.Hidden;
                         sSynth.Speak("Sleep mode initialized");
-                        listenMode = false;
+                        ISListenModeEnabled = false;
 
                         break;
 
@@ -181,21 +212,23 @@ namespace Voice
 
                     case "open facebook":
                         sSynth.Speak("Opening Facebook");
-                        facebook = System.Diagnostics.Process.Start("https://www.facebook.com/");
+                        proc = System.Diagnostics.Process.Start("https://www.facebook.com/");
                         break;
 
                     case "open youtube":
                         sSynth.Speak("Opening youtube");
-                        facebook = System.Diagnostics.Process.Start("https://www.youtube.com/");
+                        proc = System.Diagnostics.Process.Start("https://www.youtube.com/");
                         break;
 
 
-                    default:                     
+                    default:
                         answer.Text = answer.Text + " " + e.Result.Text.ToString();
                         break;
                 }
+                //End of commands
 
             }
+            //End of listening mode check
         }
 
 
@@ -205,6 +238,7 @@ namespace Voice
 
         }
 
+        //Assign AI and user name to local variables
         public void assignNames(String username, String AIname)
         {
 
