@@ -17,9 +17,9 @@ using System.Speech.Recognition;
 using System.Diagnostics;
 using System.Speech.Recognition.SrgsGrammar;
 
+ 
 namespace Voice
 {
-
     public partial class MainWindow : Window
     {
         string copyright = (string)(App.Current.Resources[Convert.ToChar(169) + " Aleksandar Zoric"]);
@@ -28,18 +28,14 @@ namespace Voice
         SpeechRecognitionEngine sRecognize = new SpeechRecognitionEngine();
         SpeechRecognitionEngine sRecognize1 = new SpeechRecognitionEngine();
         String aiName = "Ella";
-        String myName;
+        public String myName;
         Process proc;
         string ISeventStarted;
 
 
         string word = System.IO.File.ReadAllText("../../../../Voice/Voice/words.txt").Replace(@"""", String.Empty);
         string[] words = System.IO.File.ReadAllLines("../../../../Voice/Voice/words.txt");
-
-        string mediaWords = System.IO.File.ReadAllText("../../../../Voice/Voice/media.txt").Replace(@"""", String.Empty);
-        string[] mediaWordsList = System.IO.File.ReadAllLines("../../../../Voice/Voice/media.txt");
-
-
+       
         Boolean ISListenModeEnabled;
 
 
@@ -47,6 +43,7 @@ namespace Voice
         public MainWindow()
         {
             InitializeComponent();
+            loadState();
             listen();
         }
 
@@ -56,21 +53,16 @@ namespace Voice
             sSynth.SelectVoice("Microsoft Zira Desktop");
             sSynth.Speak("start up sequence initialized.  Welcome " + myName);
 
-            Choices sList = new Choices();
-            Choices mediaChoices = new Choices();
-
-            sList.Add(words);
-            mediaChoices.Add(mediaWordsList);
-
+            Choices sList = new Choices();          
+            sList.Add(words);         
             Grammar gr = new Grammar(new GrammarBuilder(sList));
-            Grammar mediaMenuGrammar = new Grammar(new GrammarBuilder(mediaChoices));
+          
 
 
             try
             {
                 sRecognize.RequestRecognizerUpdate();
-                sRecognize.LoadGrammar(gr);
-                sRecognize.LoadGrammar(mediaMenuGrammar);
+                sRecognize.LoadGrammar(gr);               
                 sRecognize.LoadGrammarAsync(new DictationGrammar());
                 sRecognize.SpeechRecognized += sRecognize_SpeechRecognized;
                 sRecognize.SetInputToDefaultAudioDevice();
@@ -95,10 +87,10 @@ namespace Voice
             string speech = e.Result.Text.ToLower();
 
             //Keyword to enable listening mode
-            if (e.Result.Text == "listen")
+            if (e.Result.Text == "ella")
             {
                 ISListenModeEnabled = true; //resume listening
-                sSynth.Speak("listening mode initializing.  Listening now");
+                sSynth.Speak("I am listening");
                 enableMic.Visibility = System.Windows.Visibility.Visible;
             }
 
@@ -158,9 +150,9 @@ namespace Voice
                         sSynth.Speak(word);
                         break;
 
-                    case "sleep":
+                    case "ella sleep":
                         enableMic.Visibility = System.Windows.Visibility.Hidden;
-                        sSynth.Speak("Sleep mode initialized");
+                        sSynth.Speak("going to sleep");
                         ISListenModeEnabled = false;
 
                         break;
@@ -198,14 +190,14 @@ namespace Voice
                         break;
 
                     case "setup":
-                        if (myName != null || aiName != null)
+                        if (myName != null)
                         {
                             sSynth.Speak("setup already initialized");
                         }
                         else
                         {
                             sSynth.Speak("setup initialized");
-                            setupScreen.Show();
+                            setupScreen.Show();                           
                         }
                         break;
 
@@ -239,11 +231,24 @@ namespace Voice
         }
 
         //Assign AI and user name to local variables
-        public void assignNames(String username, String AIname)
+        public void assignNames(String username)
         {
 
-            myName = username;
-            aiName = AIname;
+            myName = username;           
+            saveState();
+        }
+
+        public void saveState()
+        {          
+            SaveLoadStateObjects saveState = new SaveLoadStateObjects(this);
+            saveState.save();
+
+        }
+
+        public void loadState()
+        {
+            SaveLoadStateObjects loadState = new SaveLoadStateObjects(this);
+            loadState.load();
         }
 
 

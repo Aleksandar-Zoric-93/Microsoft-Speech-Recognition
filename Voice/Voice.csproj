@@ -81,6 +81,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="SaveLoadStateObjects.cs" />
     <Compile Include="Setup.xaml.cs">
       <DependentUpon>Setup.xaml</DependentUpon>
     </Compile>
@@ -136,9 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="words.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="media.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

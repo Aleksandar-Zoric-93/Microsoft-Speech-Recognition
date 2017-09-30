@@ -30,7 +30,7 @@ namespace Voice
 
         private void submitBtn_Click(object sender, RoutedEventArgs e)
         {
-            this.mainWindow.assignNames(yourName.Text, aiNameTxt.Text);
+            this.mainWindow.assignNames(yourName.Text);
             this.Close();
         }
 

@@ -16,7 +16,7 @@
 "how are you"
 "test"
 "exit application"
-"sleep"
+"ella sleep"
 "read memory"
 "who are you"
 "what are you"
@@ -37,3 +37,4 @@
 "Keelyn"
 "google"
 "search google"
+"ella"
