@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
 
 
 namespace Voice
@@ -100,7 +93,7 @@ namespace Voice
             try
             {
                 mw.myName = br.ReadString();
-                Console.WriteLine("String data: {0}", mw.myName);
+                Console.WriteLine("Current saved name: {0}", mw.myName);
             }
             catch (IOException e)
             {
@@ -110,6 +103,20 @@ namespace Voice
             br.Close();
 
 
+        }
+
+        public void delete()
+        {
+            string path;
+            path = System.IO.Path.Combine(Environment.GetFolderPath(
+            Environment.SpecialFolder.MyDoc‌​uments), "Ella");
+
+            System.IO.DirectoryInfo dir = new DirectoryInfo(path);
+
+            foreach (FileInfo file in dir.GetFiles())
+            {
+                file.Delete();
+            }
         }
     }
 }

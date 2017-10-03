@@ -1,23 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Speech.Synthesis;
 using System.Speech.Recognition;
 using System.Diagnostics;
-using System.Speech.Recognition.SrgsGrammar;
 
- 
+
 namespace Voice
 {
     public partial class MainWindow : Window
@@ -35,7 +23,7 @@ namespace Voice
 
         string word = System.IO.File.ReadAllText("../../../../Voice/Voice/words.txt").Replace(@"""", String.Empty);
         string[] words = System.IO.File.ReadAllLines("../../../../Voice/Voice/words.txt");
-       
+
         Boolean ISListenModeEnabled;
 
 
@@ -53,16 +41,16 @@ namespace Voice
             sSynth.SelectVoice("Microsoft Zira Desktop");
             sSynth.Speak("start up sequence initialized.  Welcome " + myName);
 
-            Choices sList = new Choices();          
-            sList.Add(words);         
+            Choices sList = new Choices();
+            sList.Add(words);
             Grammar gr = new Grammar(new GrammarBuilder(sList));
-          
+
 
 
             try
             {
                 sRecognize.RequestRecognizerUpdate();
-                sRecognize.LoadGrammar(gr);               
+                sRecognize.LoadGrammar(gr);
                 sRecognize.LoadGrammarAsync(new DictationGrammar());
                 sRecognize.SpeechRecognized += sRecognize_SpeechRecognized;
                 sRecognize.SetInputToDefaultAudioDevice();
@@ -82,8 +70,7 @@ namespace Voice
 
 
         private void sRecognize_SpeechRecognized(object sender, SpeechRecognizedEventArgs e)
-        {
-            SetupWindow setupScreen = new SetupWindow(this);
+        {          
             string speech = e.Result.Text.ToLower();
 
             //Keyword to enable listening mode
@@ -110,6 +97,22 @@ namespace Voice
                     ISeventStarted = string.Empty;
                 }
                 //End Google Search
+
+                //Start setup               
+                if (speech == "setup")
+                {
+                    ISeventStarted = speech;
+                    sSynth.SpeakAsync("what is your name?");
+                    speech = string.Empty;
+                }
+                else if (speech != string.Empty && ISeventStarted == "setup")
+                {
+                    assignNames(speech);
+                    myName = speech;
+                    sSynth.SpeakAsync("hi there " + speech);
+                    ISeventStarted = string.Empty;
+                }
+                //End setup
 
                 //Start of commands
                 switch (e.Result.Text)
@@ -172,14 +175,15 @@ namespace Voice
                     case "voice reset":
                         sSynth.Speak("voice reset initialized");
                         sSynth.SelectVoice("Microsoft Zira Desktop");
+                        sSynth.Speak("voice reset complete");
                         break;
 
 
                     case "setup reset":
                         sSynth.Speak("setup reset initialized");
                         myName = null;
-                        aiName = null;
-                        if (string.IsNullOrEmpty(aiName) && string.IsNullOrEmpty(myName))
+                        deleteAllSavedStates();
+                        if (string.IsNullOrEmpty(myName))
                         {
                             sSynth.Speak("setup reset complete");
                         }
@@ -188,19 +192,6 @@ namespace Voice
                             sSynth.Speak("setup reset failed");
                         }
                         break;
-
-                    case "setup":
-                        if (myName != null)
-                        {
-                            sSynth.Speak("setup already initialized");
-                        }
-                        else
-                        {
-                            sSynth.Speak("setup initialized");
-                            setupScreen.Show();                           
-                        }
-                        break;
-
 
                     case "open facebook":
                         sSynth.Speak("Opening Facebook");
@@ -234,22 +225,30 @@ namespace Voice
         public void assignNames(String username)
         {
 
-            myName = username;           
+            myName = username;
             saveState();
         }
 
+        //Start of save, load or delete chosen objects.  Refer to SaveLoadStateObjects class
         public void saveState()
-        {          
+        {
             SaveLoadStateObjects saveState = new SaveLoadStateObjects(this);
             saveState.save();
 
         }
-
+        
         public void loadState()
         {
             SaveLoadStateObjects loadState = new SaveLoadStateObjects(this);
             loadState.load();
         }
+      
+        public void deleteAllSavedStates()
+        {
+            SaveLoadStateObjects deleteState = new SaveLoadStateObjects(this);
+            deleteState.delete();
+        }
+        //End of save, load or delete chosen objects.  
 
 
 
