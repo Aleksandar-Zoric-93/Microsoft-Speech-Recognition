@@ -4,6 +4,9 @@ using System.Windows.Controls;
 using System.Speech.Synthesis;
 using System.Speech.Recognition;
 using System.Diagnostics;
+using Syn.Bot;
+using System.IO;
+using Syn.Bot.Siml;
 
 
 namespace Voice
@@ -21,6 +24,8 @@ namespace Voice
         string ISeventStarted;
 
 
+        public SimlBot simlBot;
+
         string word = System.IO.File.ReadAllText("../../../../Voice/Voice/words.txt").Replace(@"""", String.Empty);
         string[] words = System.IO.File.ReadAllLines("../../../../Voice/Voice/words.txt");
 
@@ -30,11 +35,14 @@ namespace Voice
 
         public MainWindow()
         {
+            
             InitializeComponent();
             loadState();
-            listen();
+            simlBot = new SimlBot();
+            simlBot.PackageManager.LoadFromString(File.ReadAllText("Knowledge.simlpk"));
+            listen();          
         }
-
+      
         public void listen()
         {
             sSynth.Rate = 1;
@@ -113,6 +121,15 @@ namespace Voice
                     ISeventStarted = string.Empty;
                 }
                 //End setup
+               
+                //test
+                var result = simlBot.Chat(speech);
+                var botMessage = result.BotMessage;
+
+                if (result.Success)
+                {
+                    sSynth.SpeakAsync(botMessage);
+                }
 
                 //Start of commands
                 switch (e.Result.Text)
@@ -122,13 +139,9 @@ namespace Voice
                         System.Windows.Application.Current.Shutdown();
                         break;
 
-                    case "hello":
-                        sSynth.Speak("Hello there");
-                        break;
-
-                    case "how are you":
-                        sSynth.Speak("great. how are you?");
-                        break;
+                   // case "how are you":
+                     //   sSynth.Speak("great. how are you?");
+                      //  break;
 
                     case "test":
                         sSynth.Speak("testing initializing");
@@ -157,6 +170,7 @@ namespace Voice
                         enableMic.Visibility = System.Windows.Visibility.Hidden;
                         sSynth.Speak("going to sleep");
                         ISListenModeEnabled = false;
+
 
                         break;
 
@@ -250,9 +264,9 @@ namespace Voice
         }
         //End of save, load or delete chosen objects.  
 
+        
 
-
-
+       
     }
 }
 

@@ -9,6 +9,7 @@ namespace Voice
     {
         MainWindow mw;
 
+
         public SaveLoadStateObjects(MainWindow mainWindow)
         {
             mw = mainWindow;
